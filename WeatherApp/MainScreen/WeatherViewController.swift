@@ -10,13 +10,17 @@ import UIKit
 
 class WeatherViewController: UIViewController, WeatherViewProtocol {
     
+    //MARK: IBOutlets
+    
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var spinner:UIActivityIndicatorView!
     @IBOutlet weak var searchBar:UISearchBar!
     
+    
+    //MARK: vars
+    
     var presenter:WeatherPresenterProtocol!
     var configurator:WeatherConfigurator = .init()
-    
     var items:[Item] = [Item]() {
         didSet {
             UIView.animate(withDuration: 1, animations: {
@@ -32,6 +36,8 @@ class WeatherViewController: UIViewController, WeatherViewProtocol {
         super.viewDidLoad()
         configurator.configure(with: self)
     }
+    
+    //MARK: View protocol methods
     
     func configureView() {
         searchBar.delegate = self
@@ -57,10 +63,14 @@ class WeatherViewController: UIViewController, WeatherViewProtocol {
         }
     }
     
+    //MARK: IBActions
+    
     @IBAction func getWeatherByLocation() {
        presenter.requestWeatherByLocation()
     }
 }
+
+//MARK: Delegates
 
 extension WeatherViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     

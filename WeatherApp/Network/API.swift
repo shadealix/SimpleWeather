@@ -17,9 +17,9 @@ enum Method: String {
 
 class APIClient {
     private let baseURL = "https://api.openweathermap.org/"
-    fileprivate let forecast = "/data/2.5/forecast"
-    fileprivate let APIKey = "ec82f1346b381a7e0ea0807457e65e4d"
-    fileprivate var baseParams:[String: String] {
+    private let forecast = "/data/2.5/forecast"
+    private let APIKey = "ec82f1346b381a7e0ea0807457e65e4d"
+    private var baseParams:[String: String] {
         return ["units": "metric", "appid": APIKey]
     }
     
