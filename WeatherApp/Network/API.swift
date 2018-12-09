@@ -16,7 +16,7 @@ enum Method: String {
 }
 
 class APIClient {
-    fileprivate let baseURL = "https://api.openweathermap.org/"
+    private let baseURL = "https://api.openweathermap.org/"
     fileprivate let forecast = "/data/2.5/forecast"
     fileprivate let APIKey = "ec82f1346b381a7e0ea0807457e65e4d"
     fileprivate var baseParams:[String: String] {
@@ -29,12 +29,12 @@ class APIClient {
     func requestWeather(_ city:String,  completion: @escaping (APIResponse?, URLResponse?, Error?)->())  {
         var params = baseParams
         params["q"] = city
-        guard let request = createRequest(endPoint: forecast, params: params) else {
+        guard let request = URLRequest.createRequest(baseUrl: baseURL, endPoint: forecast, params: params) else {
             completion(nil, nil, NSError(domain:"bad request", code:0, userInfo:nil))
             return
         }
     
-        self.perform(responseType: APIResponse.self, request: request) { (apiResponse, response, error) in
+        perform(responseType: APIResponse.self, request: request) { (apiResponse, response, error) in
             completion(apiResponse, response, error)
         }
     }
@@ -44,18 +44,18 @@ class APIClient {
         params["lat"] = "\(lat)"
         params["lon"] = "\(lon)"
         
-        guard let request = createRequest(endPoint: forecast, params: params) else {
+        guard let request = URLRequest.createRequest(baseUrl: baseURL, endPoint: forecast, params: params) else {
             completion(nil, nil, NSError(domain:"bad request", code:0, userInfo:nil))
             return
         }
         
-        self.perform(responseType: APIResponse.self, request: request) { (apiResponse, response, error) in
+        perform(responseType: APIResponse.self, request: request) { (apiResponse, response, error) in
             completion(apiResponse, response, error)
         }
     }
     
-    private func perform<D:Decodable>(responseType:D.Type, request:URLRequest, completion: @escaping (D?, URLResponse?, Error?)->()) {
-        URLSession.shared.dataTask(with: request) { data, response, error in
+    private func perform<D:Decodable>(responseType:D.Type, request:URLRequest, session:URLSession = .shared, completion: @escaping (D?, URLResponse?, Error?)->()) {
+        session.dataTask(with: request) { data, response, error in
             if let data = data {
                 do {
                     let apiResponse = try JSONDecoder().decode(D.self, from: data)
@@ -66,17 +66,6 @@ class APIClient {
             } else {
                 completion(nil, response, error)
             }
-            }.resume()
-    }
-    
-    private func createRequest(endPoint:String, params:[String:String], method:Method = .get) -> URLRequest? {
-        guard let url = URL(string: baseURL)?
-            .addEndpoint(endpoint: endPoint)
-            .addParams(params: params) else {
-                return nil
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        return request
+        }.resume()
     }
 }

@@ -60,3 +60,19 @@ extension String {
         return nil
     }
 }
+
+extension URLRequest {
+    static func createRequest(baseUrl:String,
+                              endPoint:String,
+                              params:[String:String],
+                              method:Method = .get) -> URLRequest? {
+        guard let url = URL(string: baseUrl)?
+            .addEndpoint(endpoint: endPoint)
+            .addParams(params: params) else {
+                return nil
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        return request
+    }
+}
