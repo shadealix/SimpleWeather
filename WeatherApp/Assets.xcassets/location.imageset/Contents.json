@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icons8-marker-64.png",
+      "filename" : "icons8-near-me-100.png",
       "scale" : "1x"
     },
     {
@@ -11,6 +11,7 @@
     },
     {
       "idiom" : "universal",
+      "filename" : "icons8-near-me-480.png",
       "scale" : "3x"
     }
   ],
